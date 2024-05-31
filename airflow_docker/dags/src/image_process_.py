@@ -36,8 +36,9 @@ def image_extract(dataset_path):
         if len(df) > 0:
             df.to_csv(dataset_path + "/preprocess_1/plant_image_data.csv", index=False)  # Save DataFrame as CSV
             df_postgres = df[['file_name', 'class']]
+            df_minio = df[['file_name', 'image']]
 
-            return df_postgres, 200
+            return df_postgres, df_minio, 200
 
         else:
             return {'message': 'Images not appended in dataframe'}, 406

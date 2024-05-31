@@ -1,7 +1,7 @@
 import sys
 sys.path.append("/Users/gowtham/Documents/python/SCB/airflow/airflow_docker/src")
 
-from src.image_process_1 import image_extract
+from dags.src.image_process_ import image_extract
 from datetime import datetime, timedelta
 from sqlalchemy import create_engine
 import psycopg2
@@ -13,7 +13,7 @@ from airflow.operators.python import PythonOperator
 
 # Define connection details (replace with your actual credentials)
 POSTGRES_CONN_ID = "postgres"
-POSTGRES_TABLE_NAME = "image_classification"
+POSTGRES_TABLE_NAME = "public.image_class"
 
 dataset_path = "/opt/airflow/dags/data"
 
@@ -27,14 +27,14 @@ default_args = {
 def push_data_to_postgres():
     # Replace with your logic to get/create the DataFrame (df)
 
-    df, status_code = image_extract(dataset_path)
+    df, df1, status_code = image_extract(dataset_path)
 
     if status_code == 200:
 
         # Connect to Postgres using SQLAlchemy and psycopg2
         
         engine = create_engine(
-            f"postgresql://postgres:@postgres/{POSTGRES_CONN_ID}",
+            f"postgresql://airflow:airflow@host.docker.internal:5432/{POSTGRES_CONN_ID}",
         )
 
         # Convert DataFrame to a list of dictionaries (optimized for bulk inserts)
@@ -53,22 +53,18 @@ def push_data_to_postgres():
 
         # Alternatively, you could use pandas.to_sql (might be slower for large datasets)
 
-        engine = create_engine(
-            f"postgresql://postgres:@postgres/{POSTGRES_CONN_ID}",
-        )
-
         # Insert data into the table using pandas.to_sql
-        df.to_sql(POSTGRES_TABLE_NAME, engine, index=False)
+        df.to_sql(POSTGRES_TABLE_NAME, engine, if_exists='replace', index=False)
 
     else:
         print(f'Error: {df} with status_code {status_code}')
 
 # Define the DAG
 with DAG(
-    dag_id="push_data_to_postgres_dag_v08",
+    dag_id="push_data_to_postgres_dag_v2",
     default_args=default_args,
     start_date=datetime(2024, 5, 25),
-    schedule_interval="@daily",  # Adjust as needed (e.g., hourly, @once)
+    schedule_interval='@monthly',  # Adjust as needed (e.g., hourly, @once)
 ) as dag:
 
     # Task to create the table (optional, can be run manually if the table already exists)
@@ -77,7 +73,7 @@ with DAG(
         postgres_conn_id='postgres_localhost',
         autocommit=True,
         sql="""
-        CREATE TABLE IF NOT EXISTS test.image_classification (
+        CREATE TABLE IF NOT EXISTS public.image_class (
         image_id serial,
         filename varchar primary key,
         class varchar
@@ -93,6 +89,8 @@ with DAG(
         provide_context=True,  # Makes df available in the function
         execution_timeout=timedelta(minutes=60)  # Increase timeout if needed
     )
+
+
 
 # Set up the task dependencies (create table first, then push data)
 create_table_task >> push_data_task
