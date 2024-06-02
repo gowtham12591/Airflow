@@ -10,7 +10,7 @@ def image_extract(dataset_path):
 
     try:
         # image_size = input("Enter the resizing width and height of the image(e.g., 128, 128): ")
-        image_size = (128, 128)
+        # image_size = (128, 128)
         # Validate user input for image size
         # image_size = eval(image_size)
 
@@ -24,10 +24,10 @@ def image_extract(dataset_path):
                     image = cv2.imread(image_path)
 
                     # Resize the image using OpenCV's resize function
-                    resized_image = cv2.resize(image, image_size)
+                    # resized_image = cv2.resize(image, image_size)
 
                     # Temporary list to store data for each image
-                    image_data = {"file_name": img, "class": labels, "image": resized_image}
+                    image_data = {"file_name": img, "class": labels, "image": image}
 
                     # Append data using pd.concat (recommended approach)
                     df = pd.concat([df, pd.DataFrame.from_dict([image_data])], ignore_index=True)

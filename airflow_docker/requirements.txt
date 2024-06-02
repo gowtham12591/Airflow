@@ -1,3 +1,7 @@
 opencv-python-headless
 numpy
 pandas
+minio
+scikit-learn
+matplotlib
+img-aug
