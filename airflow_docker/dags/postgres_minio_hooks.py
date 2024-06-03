@@ -1,6 +1,6 @@
 
 from io import BytesIO
-from dags.src.image_process_ import image_extract
+from src.image_process_ import image_extract
 from datetime import datetime, timedelta
 from sqlalchemy import create_engine
 import psycopg2

@@ -1,6 +1,6 @@
 
 from io import BytesIO
-from dags.src.image_process_ import image_extract
+from src.image_process_ import image_extract
 from datetime import datetime, timedelta
 from sqlalchemy import create_engine
 import psycopg2
@@ -15,7 +15,7 @@ from airflow.operators.python import PythonOperator
 
 # Define connection details (replace with your actual credentials)
 POSTGRES_CONN_ID = "postgres"
-POSTGRES_TABLE_NAME = "public.image_class"
+POSTGRES_TABLE_NAME = "image_class"
 
 dataset_path = "/opt/airflow/dags/data"
 
@@ -94,7 +94,7 @@ def push_data_to_minio_task():
 
 # Define the DAG
 with DAG(
-    dag_id="push_data_postgres_minio_dag_v04",
+    dag_id="push_data_postgres_minio_dag_v05",
     default_args=default_args,
     start_date=datetime(2024, 1, 25),
     schedule_interval='@yearly',  # Adjust as needed (e.g., hourly, @once)

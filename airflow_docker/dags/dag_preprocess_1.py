@@ -69,16 +69,42 @@ def data_preprocess_1():
     df_minio = data_retrieval_minio()
 
     # Pass the dataframes for preprocessing
-    df_preprocess_ = image_preprocess_1(df_postgres, df_minio)
+    image_norm_array, status_code = image_preprocess_1(df_postgres, df_minio)
 
-    
-
-
-
-
-
+    # Validate and then push the array to Minio
     if status_code == 200:
-        
+
+        config = {
+        "minio_endpoint": "host.docker.internal:9000",
+        "minio_username": "ROOTNAME",
+        "minio_password": "CHANGEME123",
+        }
+
+        client = Minio(config["minio_endpoint"],
+               secure=False,
+               access_key=config["minio_username"],
+               secret_key=config["minio_password"],
+        )
+
+        # Define bucket name and object name (filename)
+        bucket_name = "airflow" # Better to be created in Minio earlier
+        object_name = "image_preprocess_1.npy"  # Replace with desired filename
+
+        try:
+            # Upload data to MinIO
+            client.put_object(
+                bucket_name=bucket_name, 
+                object_name=object_name, 
+                data=image_norm_array.tobytes(), 
+                length=image_norm_array.nbytes,
+                # content_type='application/csv'
+                )
+
+            # Optional: Log success message
+            print(f"Successfully uploaded data to MinIO: {object_name}")
+
+        except S3Error as e:
+            print(f"Error occurred: {str(e)}")       
         
     else:
-        print(f'Error: {df_postgres} with status_code {status_code}')
+        print(f'Error: with {image_norm_array} status_code {status_code}')
