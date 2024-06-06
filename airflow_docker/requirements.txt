@@ -4,4 +4,4 @@ pandas
 minio
 scikit-learn
 matplotlib
-img-aug
+imgaug

@@ -9,10 +9,6 @@ def image_extract(dataset_path):
     df = pd.DataFrame(columns=["file_name", "class", "image"])
 
     try:
-        # image_size = input("Enter the resizing width and height of the image(e.g., 128, 128): ")
-        # image_size = (128, 128)
-        # Validate user input for image size
-        # image_size = eval(image_size)
 
         for labels in os.listdir(dataset_path + '/plant_images'):
             if labels != ".DS_Store":
@@ -23,9 +19,6 @@ def image_extract(dataset_path):
                     image_path = os.path.join(class_path, img)
                     image = cv2.imread(image_path)
 
-                    # Resize the image using OpenCV's resize function
-                    # resized_image = cv2.resize(image, image_size)
-
                     # Temporary list to store data for each image
                     image_data = {"file_name": img, "class": labels, "image": image}
 
@@ -34,7 +27,7 @@ def image_extract(dataset_path):
 
             # After processing all images, consider saving the DataFrame
         if len(df) > 0:
-            df.to_csv(dataset_path + "/preprocess_1/plant_image_data.csv", index=False)  # Save DataFrame as CSV
+            # df.to_csv(dataset_path + "/preprocess_1/plant_image_data.csv", index=False)  # Save DataFrame as CSV
             df_postgres = df[['file_name', 'class']]
             df_minio = df[['file_name', 'image']]
 

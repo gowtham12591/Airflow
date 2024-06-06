@@ -54,7 +54,7 @@ def push_data_to_minio_task():
 
         config = {
         "minio_endpoint": "host.docker.internal:9000",
-        "minio_username": "ROOTNAME",
+        "minio_username": "ROOTUSER",
         "minio_password": "CHANGEME123",
         }
 
@@ -71,7 +71,7 @@ def push_data_to_minio_task():
 
         # Define bucket name and object name (filename)
         bucket_name = "airflow" # Better to be created in Minio earlier
-        object_name = "plant_data.csv"  # Replace with desired filename
+        object_name = "airflow_test/preprocess/plant_data.csv"  # Replace with desired filename
 
         try:
             # Upload data to MinIO

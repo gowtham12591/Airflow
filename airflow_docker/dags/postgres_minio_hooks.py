@@ -15,7 +15,7 @@ from airflow.providers.amazon.aws.hooks.s3 import S3Hook
 
 # Define connection details (replace with your actual credentials)
 POSTGRES_CONN_ID = "postgres"
-POSTGRES_TABLE_NAME = "public.image_class"
+POSTGRES_TABLE_NAME = "image_class"
 
 dataset_path = "/opt/airflow/dags/data"
 
@@ -62,7 +62,7 @@ def push_data_to_minio_task(ds_nodash):
 
         # Define bucket name and object name (filename)
         bucket_name = "airflow"
-        object_name = f"plant_data/{ds_nodash}.csv"  # Replace with desired filename
+        object_name = f"airflow_testing/preprocess/plant_data.csv"  # Replace with desired filename
 
         try:
             # Upload data to MinIO

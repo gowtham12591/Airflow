@@ -31,7 +31,7 @@ def postgres_to_s3(ds_nodash, next_ds_nodash):
         logging.info('saved orders data in text file: %s', f"dags/get_orders_{ds_nodash}.txt")
 
     # step 2: uploading the text file to s3 bucket
-        s3_hook = S3Hook(aws_conn_id="minio_conn")
+        s3_hook = S3Hook(aws_conn_id="minio_conn_")
         s3_hook.load_file(
             filename=f.name,
             key=f'orders/{ds_nodash}.txt',
@@ -41,7 +41,7 @@ def postgres_to_s3(ds_nodash, next_ds_nodash):
         logging.info('Orders file %s has been pushed to S3', f.name)
 
 with DAG(
-    dag_id='dag_with_postgres_hooks_v06',
+    dag_id='dag_with_postgres_hooks_v07',
     default_args=default_args,
     start_date=datetime(2022, 1, 1),
     end_date=datetime(2023, 1, 1),
@@ -52,4 +52,4 @@ with DAG(
         task_id='postgres_to_s3',
         python_callable=postgres_to_s3
 
-    )
+    )   
